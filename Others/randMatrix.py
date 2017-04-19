@@ -39,17 +39,17 @@ def toString(C):
 
 #计时器
 def timmer(func):
-    def wrapper(a, b):
+    def wrapper(a, b, n):
         start = time.time()
-        c = func(a, b)
+        ans = func(a, b, n)
         end = time.time()
         print(end - start)
-        return c
+        return ans
     return wrapper
 
 #常规乘法
 @timmer
-def mulit(A, B):
+def mulit(A, B, n):
     '''矩阵的常规乘法'''
     res = [[0] * len(B[0]) for i in range(len(A))]
     for i in range(len(A)):
@@ -127,7 +127,7 @@ def Minus(f, g, n):
     return h
 
 @timmer
-def Strassen(a, b, n=200):
+def Strassen(a, b, n):
     '''矩阵Strassen乘法方法'''
     k = n
     if k == 2:
@@ -172,11 +172,13 @@ def main(args):
         A = readMat('mat1')
         B = readMat('mat2')
         if args == 's':
-            C = Strassen(A, B)
+            C = Strassen(A, B, 200)
         else:
-            C = mulit(A, B)
+            C = mulit(A, B, 0)
         with open('ans', 'w') as f:
             f.writelines(toString(C))            
     
 if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        sys.argv.append('s')
     main(sys.argv[1])
