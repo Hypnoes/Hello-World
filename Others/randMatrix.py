@@ -1,12 +1,16 @@
-import random
-import sys
-import time
 '''
-用法： 
+    用法:
         py randMatrix.py f => 生成两个矩阵数据文件mat1 mat2用于初始化
         py randMatrix.py d => 标准方法计算
         py randMatrix.py s => strassen算法计算
 '''
+
+#! python3
+# -*- coding:utf-8 -*-
+
+import random
+import sys
+import time
 
 #功能函数
 def newMat(name):
