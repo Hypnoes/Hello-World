@@ -1,10 +1,11 @@
 import numpy as np
 import cv2
 
-face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
+data = 'C:\\opencv\\sources\\data\\haarcascades\\'
+face_cascade = cv2.CascadeClassifier(data + 'haarcascade_frontalface_default.xml')
+eye_cascade = cv2.CascadeClassifier(data + 'haarcascade_eye.xml')
 
-img = cv2.imread('sachin.jpg')
+img = cv2.imread(r'C:\Users\Hypnoes\Pictures\Camera Roll\WIN_20161106_18_18_29_Pro.jpg')
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
 faces = face_cascade.detectMultiScale(gray, 1.3, 5)
@@ -18,4 +19,4 @@ for (x, y, w, h) in faces:
 
 cv2.imshow('img', img)
 cv2.waitKey(0)
-cv2.destoryAllWindows()
+cv2.destroyAllWindows()
