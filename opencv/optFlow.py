@@ -1,6 +1,8 @@
 import numpy as np
 import cv2
 
+#cap = cv2.VideoCapture(r"C:\Users\Hypnoes\Desktop\square.mp4")
+
 cap = cv2.VideoCapture(0)
 
 # params for ShiTomasi corner detection
