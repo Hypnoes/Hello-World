@@ -9,13 +9,14 @@ if len(sys.argv) == 1:
 else:
     cap = cv2.VideoCapture(sys.argv[1])
 
-fgbg = cv2.createBackgroundSubtractorMOG2()
+fgbg = cv2.createBackgroundSubtractorKNN()
 
 while(1):
     ret, frame = cap.read()
     fgmask = fgbg.apply(frame)
 
     fgmask = cv2.medianBlur(fgmask, 7)
+    #fgmask = cv2.blur(fgmask, (2,2), fgmask)
     cv2.imshow('frame', fgmask)
 
     k = cv2.waitKey(30) & 0xff
