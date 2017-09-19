@@ -10,10 +10,10 @@ if len(sys.argv) == 1:
 else:
     cap = cv2.VideoCapture(sys.argv[1])
 
-fgbg = cv2.createBackgroundSubtractorKNN()
+fgbg = cv2.createBackgroundSubtractorMOG2()
 
 fps = int(cap.get(cv2.CAP_PROP_FPS))
-if fps >= 1:
+if(fps >= 1):
     pass
 else:
     fps = 30
@@ -26,7 +26,7 @@ while(1):
     ret, frame = cap.read()
     fgmask = fgbg.apply(frame)
 
-    fgmask = cv2.medianBlur(fgmask, 7)
+    #fgmask = cv2.medianBlur(fgmask, 7)
     #fgmask = cv2.blur(fgmask, (2,2), fgmask)
     #gray = cv2.cvtColor(fgmask, cv2.COLOR_BGR2GRAY)
     cv2.imshow('frame', fgmask)
