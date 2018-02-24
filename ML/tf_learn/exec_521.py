@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 
@@ -177,7 +179,8 @@ def train(mnist):
 # 主程序入口
 def main(argv=None):
     # 声明处理MNIST数据集的类, 这个类在初始化时会自动下载数据.
-    mnist = input_data.read_data_sets("c:\\users\\hypnoes\\desktop\\mnist", one_hot=True)
+    home = str(Path.home()) + '\mnist'
+    mnist = input_data.read_data_sets(home, one_hot=True)
     train(mnist)
 
 # tensorflow提供了一个主程序入库, tf.app.run会调用上面定义的main函数
