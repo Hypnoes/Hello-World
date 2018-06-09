@@ -1,6 +1,6 @@
 from matplotlib import pyplot as plt
 
-def d_color(x, y):
+def d_color(x: list, y: list) -> (list, list, list, list):
     ax, ay, bx, by = [], [], [], []
     for xi, yi in zip(x, y):
         if yi > 1 - xi:

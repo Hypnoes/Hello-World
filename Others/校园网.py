@@ -4,8 +4,8 @@ def main():
     url = 'http://10.10.10.10/srun_portal_pc.php?ac_id=1&url='
     k = {
         'action':'login',
-        'username':'123456',
-        'password':'{B}MTIzNDU2',
+        'username':'16108028',
+        'password':'{B}MTE4MDI3',
         'ac_id':'1',
         'user_ip':'',
         'nas_ip':'',

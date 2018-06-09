@@ -5,8 +5,8 @@ def con():
     url = 'http://10.10.10.10/srun_portal_pc.php?ac_id=1&url='
     k = {
         'action':'login',
-        'username':'123456',
-        'password':'{B}MTIzNDU2',
+        'username':'16108028',
+        'password':'{B}MTE4MDI3',
         'ac_id':'1',
         'user_ip':'',
         'nas_ip':'',
@@ -33,13 +33,11 @@ def tes(sec):
         return con()                            #链接异常
 
 def main():
-    i = 5
+    i = 60
     r = con()
     while(tes(i) == None):
-        i = i * 2
-        if i > 1800:
-            i = 1280
-
+        pass
+        
 #if __name__ == '__main__ ':
 while(True):
     main()

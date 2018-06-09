@@ -12,7 +12,7 @@ beta = []
 ah = []
 al = []
 
-with open("c:\\users\\hypnoes\\downloads\\cedf.csv\\plt.csv") as csvfile:
+with open("c:\\users\\hypnoes\\downloads\\cedf.csv\\cedf.csv") as csvfile:
     csvreader = csv.reader(csvfile)
     for row in csvreader:
         alpha.append(row[0])
@@ -36,10 +36,8 @@ X = np.array([0.0] + aX[aX.nonzero()].tolist())
 aY = np.tril(Y).flatten()
 Y = np.array([0.0] + aY[aY.nonzero()].tolist())
 
-#surf1 = ax.plot_surface(X, Y, al, label="al", linewidth=0, antialiased=True)
-#surf2 = ax.plot_surface(X, Y, ah, label="ah", linewidth=0, antialiased=True)
-
 ax = fig.add_subplot(1, 2, 1, projection='3d')
+#surf1 = ax.plot_surface(X, Y, al, label="al", linewidth=0, antialiased=True)
 surf3 = ax.plot_trisurf(X, Y, ah, alpha=0.9, label="ah", linewidth=0, antialiased=True)
 
 ax.set_zlim(0.5, 1.0)
@@ -51,6 +49,7 @@ ax.set_ylabel("beta")
 ax.set_zlabel("accuracy %")
 
 ax = fig.add_subplot(1, 2, 2, projection='3d')
+#surf2 = ax.plot_surface(X, Y, ah, label="ah", linewidth=0, antialiased=True)
 surf4 = ax.plot_trisurf(X, Y, al, alpha=0.9, label="al", linewidth=0, antialiased=True)
 
 ax.set_zlim(0.5, 1.0)
