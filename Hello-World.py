@@ -5,8 +5,8 @@
 '''
 
 def main():
-    print("Hello world!")
+    print("\033[0mHello world.")
 
 if __name__ == '__main__':
     main()
- 
+     
