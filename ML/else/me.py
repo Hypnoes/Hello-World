@@ -108,10 +108,7 @@ def avg(l: Vector) -> float:
     return sum(l) / len(l)
 
 def sgn(x: float) -> float:
-    if x >= 0:
-        return 1.0
-    else:
-        return 0.0
+    return 1.0 if x > 0 else 0.0
 
 def linear(x: float) -> float:
     return x
