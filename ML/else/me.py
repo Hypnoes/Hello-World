@@ -113,7 +113,7 @@ def sgn(x: float) -> float:
 def linear(x: float) -> float:
     return x
 
-def d(fn: Callable, x: float, h: float) -> float:
+def diff(fn: Callable, x: float, h: float) -> float:
     '''
         Differential.
 
@@ -153,32 +153,29 @@ def gen_data(tri: int, tes: int) -> (Vector, Vector):
     train = list()
     test = list()
 
+    # data structure : List(D(features: List, label: Double))
     # train-data
     for i in range(tri):
         c1x_train.append(random.uniform(0.0, 0.5))
         c1y_train.append(random.uniform(0.0, 0.5))
 
-    for i in range(tri):
         c2x_train.append(random.uniform(0.5, 1.0))
         c2y_train.append(random.uniform(0.5, 1.0))
+
+        train.append(D([c1x_train[i], c1y_train[i]], 0))
+        train.append(D([c2x_train[i], c2y_train[i]], 1))
 
     # test-data
     for i in range(tes):
         c1x_test.append(random.uniform(0.0, 0.5))
         c1y_test.append(random.uniform(0.0, 0.5))
 
-    for i in range(tes):
         c2x_test.append(random.uniform(0.5, 1.0))
         c2y_test.append(random.uniform(0.5, 1.0))
 
-    # data structure : List(D(features: List, label: Double))
-    for i in range(tri):
-        train.append(D([c1x_train[i], c1y_train[i]], 0))
-        train.append(D([c2x_train[i], c2y_train[i]], 1))
-
-    for i in range(tes):
         test.append(D([c1x_test[i], c1y_test[i]], 0))
         test.append(D([c2x_test[i], c2y_test[i]], 0))
+
     random.shuffle(train)
     random.shuffle(test)
 
@@ -187,10 +184,10 @@ def gen_data(tri: int, tes: int) -> (Vector, Vector):
 def main():
     train, test = gen_data(1000, 10)
 
-    m = Model(linear)
+    model = Model(linear)
 
-    m.fit(train, 0.5, 0.2, iteration=3)
-    acc, nacc = m.estimize(test)
+    model.fit(train, 0.5, 0.2, iteration=3)
+    acc, nacc = model.estimize(test)
 
     print(f'acc: {acc}; nacc: {nacc}')
 
