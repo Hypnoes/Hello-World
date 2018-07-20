@@ -15,7 +15,7 @@ from requests.exceptions import Timeout, ConnectionError
 class Login(object):
     def __init__(self, username=None, password=None):
         self.username_ = str(username)
-        self.password_ = '{B}' + str(b64encode(password))
+        self.password_ = '{B}' + str(b64encode(password.encode()))
 
         self.url = 'http://10.10.10.10/srun_portal_pc.php?ac_id=1&url='
 
@@ -36,8 +36,7 @@ class Login(object):
             'User-Agent':'Mozilla/5.0(Windows NT 10.0; Win64; x64)'
             }
 
-        self.logger = type('logger', (Logger),
-            { 'info': print, 'warn': print, 'error': print })
+        self.logger = None
 
     def setLogger(self, logger):
         self.logger = logger
@@ -112,7 +111,7 @@ class Offline(Exception):
 class Delay(object):
     def __init__(self, sec=0):
         self.sec = sec
-        
+
     def __call__(self, func):
         def wrapper(*args, **kwargs):
             time.sleep(self.sec)
@@ -120,7 +119,7 @@ class Delay(object):
         return wrapper
 
 def main(ns):
-    me = Login(username=ns.username, password=ns.password)
+    me = Login(username=ns.n, password=ns.p)
     me.setLogger(LoginLog('auto-login'))
 
     try:
