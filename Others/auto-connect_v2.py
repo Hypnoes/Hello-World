@@ -15,7 +15,7 @@ from requests.exceptions import Timeout, ConnectionError
 class Login(object):
     def __init__(self, username=None, password=None):
         self.username_ = str(username)
-        self.password_ = '{B}' + str(b64encode(password.encode()))
+        self.password_ = '{B}' + b64encode(password.encode()).decode()
 
         self.url = 'http://10.10.10.10/srun_portal_pc.php?ac_id=1&url='
 
