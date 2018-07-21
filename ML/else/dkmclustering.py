@@ -35,6 +35,34 @@ def plot_cluster(all_samples, centroids, n_samples_per_cluster):
         plt.plot(centroid[0], centroid[1], marksize=28, marker='x', color='m', mew=5)
     plt.show()
 
+def choose_random_centroids(samples, n_cluster):
+    # Step 0: Initialization - Select `n_clusters` number of random points
+    n_samples = tf.shape(samples)[0]
+    random_indices = tf.random_shuffle(tf.range(0, n_samples))
+    begin = [0, ]
+    size = [n_clusters, ]
+    size[0] = n_clusters
+    centroid_indices = tf.slice(random_indices, begin, size)
+    initial_centroids = tf.gather(samples, centroid_indices)
+    return initial_centroids
+
+def assign_to_nearest(samples, centroids):
+    # Finds the nearest centroid for each sample
+    # Start from http://esciencegroup.com/2016/01/05/an-encounter-with-googles-tensorflow/
+    distances = tf.reduce_sum(tf.square(
+        tf.subtract(expanded_vectors, expanded_centroids)), 2)
+    mins = tf.argmin(distances, 0)
+    # End from http://esciencegroup.com/2016/01/05/an-encounter-with-googles-tensorflow/
+    nearest_indices = mins
+    return nearest_indices
+
+def update_centroids(samples, nearest_indices, n_clusters):
+    # Updates the centroid to be the mean of all smaples associated with it
+    nearest_indices = tf.to_int32(nearest_indices)
+    partitions = tf.dynamic_partition(samples, nearest_indices, n_clusters)
+    net_centroids = tf.concat([tf.expand_dims(tf.reduce_mean(partition, 0), 0) for partition in partitions], 0)
+    return new_centroids
+
 if __name__ == '__main__':
     n_features = 2
     n_clusters = 3
@@ -44,12 +72,16 @@ if __name__ == '__main__':
 
     random.seed(seed)
 
-    centroids, samples = create_samples(n_clusters, n_samples_per_cluster,
+    data_centroids, samples = create_samples(n_clusters, n_samples_per_cluster,
                                         n_features, embiggen_factor, seed)
+    initial_centroids = choose_random_centroids(samples, n_clusters)
+    nearest_indices = assign_to_nearest(samples, initial_centroids)
+    updated_centroids = nudate_centroids(samples, nearest_indices, n_clusters)
 
     model = tf.global_variables_initializer()
     with tf.Session() as session:
         sample_values = session.run(samples)
-        centroid_values = session.run(centroids)
+        updated_centroid_value = session.run(updated_centroids)
+        print(updated_centroid_value)
 
-        plot_cluster(sample_values, centroid_values, n_samples_per_cluster)
+    plot_cluster(sample_values, centroid_values, n_samples_per_cluster)
