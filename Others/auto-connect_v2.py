@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import time
+import re
 import logging
 import argparse
 
@@ -15,20 +16,41 @@ from requests.exceptions import Timeout, ConnectionError
 class Login(object):
     def __init__(self, username=None, password=None):
         self.username_ = str(username)
-        self.password_ = '{B}' + b64encode(password.encode()).decode()
+        self.password_ = b64encode(password.encode()).decode()
 
-        self.url = 'http://10.10.10.10/srun_portal_pc.php?ac_id=1&url='
+        self.url = 'http://10.199.0.2:8080/byod/index.xhtml'
 
-        self.data = {
-            'action':'login',
-            'username': self.username_,
-            'password': self.password_,
-            'ac_id':'1',
-            'user_ip':'',
-            'nas_ip':'',
-            'save_me':'0',
-            'ajax':'1'
-            }
+        self.get_loc = {
+            "wlannasid" : "",
+            "usermac" : "",
+            "userurl" : "",
+            "userip" : "",
+            "ssid" : "",
+            "btn" : "",
+            "j_id_3_SUBMIT" : "1",
+            "javax.faces.ViewState" : ""
+        }
+
+        self.data = {    
+            "javax.faces.partial.ajax" : "true",
+            "javax.faces.source" : "mainForm:j_id_p",
+            "javax.faces.partial.execute" : "mainForm",
+            "javax.faces.partial.render" : "mainForm:error mainForm:forResetPwd",
+            "mainForm:j_id_p" : "mainForm:j_id_p",
+            "mainForm:forResetPwd" : "",
+            "userName" : "",
+            "userPwd" : "",
+            "userDynamicPwd" : "",
+            "userDynamicPwdd" : "",
+            "serviceType" : "",
+            "mainForm:userNameLogin" : self.username_,
+            "mainForm:serviceSuffixLogin" : "",
+            "mainForm:passwordLogin" : self.password_,
+            "mainForm:userDynamicPwd" : "",
+            "mainForm:userDynamicPwdd" : "",
+            "mainForm_SUBMIT" : "1",
+            "javax.faces.ViewState" : ""
+        }
 
         self.header = {
             'X-Requested-With':'XMLHttpRequest',
@@ -43,10 +65,22 @@ class Login(object):
 
     @Delay(sec=3)
     def connect(self):
+
         try:
-            res = requests.post(self.url, data=self.data, headers=self.header)
+            # Step one - get login prefix
+            view_state = re.search(r'id="javax.faces.ViewState" value=".*"',
+                                   requests.get(self.url).content.decode())\
+                           .group().split(" ")[1].split("=")[1].split('"')[1]
+
+            self.get_loc['javax.faces.ViewState'] = view_state
+            self.data['ViewState'] = view_state
+
+            login_loc = requests.post(self.url, data=self.get_loc, headers=self.header).url
+
+            # Step two - post login info
+            res = requests.post(login_loc, data=self.data, headers=self.header)
             return res.ok
-        
+
         except Timeout:
             self.logger.error("Login Failed :: Timeout")
             return False
