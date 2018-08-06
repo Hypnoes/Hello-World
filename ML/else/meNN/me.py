@@ -57,13 +57,13 @@ class Model(object):
                 err = 0.0
 
                 for _ in range(iteration):
-                    # forward boardcast
+                    # forward broadcast
                     for w, x in zip(W_, f):
                         y_ += w * x
 
                     y_ = self.fn(y_ + bias)
 
-                    # backward boardcast
+                    # backward broadcast
                     delta_W = list(map(lambda x_i: lr * (l - y_) * x_i, f))
                     delta_b = lr * (l - y_)
                     W_ = add(W_, delta_W)
