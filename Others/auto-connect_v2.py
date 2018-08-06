@@ -13,6 +13,22 @@ import requests
 
 from requests.exceptions import Timeout, ConnectionError
 
+class delay(object):
+    def __init__(self, sec=0):
+        self.sec = sec
+
+    def __call__(self, func):
+        def wrapper(*args, **kwargs):
+            time.sleep(self.sec)
+            func(*args, **kwargs)
+        return wrapper
+
+class debug(object):
+    def __call__(self, func):
+        def wrapper(*args, **kwargs):
+            func(*args, **kwargs)
+        return wrapper
+
 class Login(object):
     def __init__(self, username=None, password=None):
         self.username_ = str(username)
@@ -31,7 +47,7 @@ class Login(object):
             "javax.faces.ViewState" : ""
         }
 
-        self.data = {    
+        self.data = {
             "javax.faces.partial.ajax" : "true",
             "javax.faces.source" : "mainForm:j_id_p",
             "javax.faces.partial.execute" : "mainForm",
@@ -63,7 +79,7 @@ class Login(object):
     def setLogger(self, logger):
         self.logger = logger
 
-    @Delay(sec=3)
+    @delay(sec=3)
     def connect(self):
 
         try:
@@ -92,7 +108,7 @@ class Login(object):
         finally:
             pass
 
-    @Delay(sec=7)
+    @delay(sec=7)
     def test(self):
         try:
             test_point = 'http://106.14.182.15/?'
@@ -141,16 +157,6 @@ class LoginLog(Logger):
 class Offline(Exception):
     def __init__(self):
         Exception.__init__("OffLine")
-
-class Delay(object):
-    def __init__(self, sec=0):
-        self.sec = sec
-
-    def __call__(self, func):
-        def wrapper(*args, **kwargs):
-            time.sleep(self.sec)
-            func(*args, **kwargs)
-        return wrapper
 
 def main(ns):
     me = Login(username=ns.n, password=ns.p)
