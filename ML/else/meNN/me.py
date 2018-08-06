@@ -45,7 +45,7 @@ class Model(object):
                 None
         '''
 
-        W_ = [0.0] * len(data[1].features)
+        W_ = [0.0] * len(data[1].features) # fix len data[1]
         bias = 0.0
         y_ = 0.0
 
@@ -75,7 +75,7 @@ class Model(object):
 
         self.W = W_
 
-    def estimize(self, data: List[D]) -> (float, float):
+    def estimize(self, data: List[D]) -> float:
         features = list()
         labels = list()
 
@@ -91,9 +91,8 @@ class Model(object):
         y_ = list(map(lambda i: 1.0 if i >= avg(y_) else 0.0, y_))
 
         acc = len(select(lambda t: t[0] == t[1], zip(y_, labels))) / len(data)
-        nacc = len(select(lambda t: t[0] != t[1], zip(y_, labels))) / len(data)
 
-        return acc, nacc
+        return acc
 
 def select(fn: Callable[..., bool], l: List[T]) -> List[T]:
     return [x for x in l if fn(x)]
@@ -187,9 +186,9 @@ def main():
     model = Model(linear)
 
     model.fit(train, 0.5, 0.2, iteration=3)
-    acc, nacc = model.estimize(test)
+    acc = model.estimize(test)
 
-    print(f'acc: {acc}; nacc: {nacc}')
+    print(f'acc: {acc}')
 
 if __name__ == '__main__':
     main()
