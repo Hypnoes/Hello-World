@@ -5,8 +5,9 @@ __Author__ = 'Hypnoes'
 import random
 from typing import Callable, List, TypeVar
 
+from vector import Vector
+
 T = TypeVar('T')
-Vector = List[float]
 
 class D(object):
     def __init__(self, features: Vector, label: float, featurename: List[str] = None):

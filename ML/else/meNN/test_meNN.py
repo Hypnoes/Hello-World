@@ -1,5 +1,5 @@
 import unittest
-import me
+import model as me
 
 class TestMethods(unittest.TestCase):
 
