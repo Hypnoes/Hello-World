@@ -1,7 +1,14 @@
 # Hello-World
-一些随手写的东西 
+一些随手写的东西
 
-> ...
+- ML      : Machine Learning 相关
+- ML/else : NN build by Hypnoes
+- opencv  : opencv 相关学习笔记
+- qt      ：qt学习，练习笔记
+- paper   : 论文画图
+- Session : 爬虫学习
+
+> LSTM EXAMPLE
 ```python
     # 定义一个LSTM结构。在TensorFlow中通过一句简单的命令就可以实现一个完整的LSTM结构。
     # LSTM钟使用的变量也会在该函数中自动被声明
