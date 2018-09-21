@@ -29,7 +29,7 @@ class Model(object):
 
     def fit(self, data: List[D],
             lr: float,
-            batch_size: int = 10,
+            batch_size: int = 20,
             iteration: int = 1,
             epoch: int = 16) -> None:
         '''
@@ -50,27 +50,30 @@ class Model(object):
         bias = 0.0
         y_ = 0.0
 
+        batchs = splist(data, batch_size)
+
         for i in range(epoch):
-            for d in data:
-                f = d.features
-                l = d.label
+            for batch in batchs:
+                for d in batch:
+                    f = d.features
+                    l = d.label
 
-                err = 0.0
+                    err = 0.0
 
-                for _ in range(iteration):
-                    # forward broadcast
-                    for w, x in zip(W_, f):
-                        y_ += w * x
+                    for _ in range(iteration):
+                        # forward broadcast
+                        for w, x in zip(W_, f):
+                            y_ += w * x
 
-                    y_ = self.fn(y_ + bias)
+                        y_ = self.fn(y_ + bias)
 
-                    # backward broadcast
-                    delta_W = list(map(lambda x_i: lr * (l - y_) * x_i, f))
-                    delta_b = lr * (l - y_)
-                    W_ = add(W_, delta_W)
-                    bias += delta_b
+                        # backward broadcast
+                        delta_W = list(map(lambda x_i: lr * (l - y_) * x_i, f))
+                        delta_b = lr * (l - y_)
+                        W_ = add(W_, delta_W)
+                        bias += delta_b
 
-                    err += (l - y_)
+                        err += (l - y_)
 
             print(f'epoch {i}: err -> {err}')
 
@@ -112,6 +115,9 @@ def sgn(x: float) -> float:
 
 def linear(x: float) -> float:
     return x
+
+def splist(l: List[T], s: int) -> List[List[T]]:
+    return [l[i:i+s] for i in range(len(l)) if i % s == 0]
 
 def diff(fn: Callable, x: float, h: float) -> float:
     '''
