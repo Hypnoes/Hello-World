@@ -7,51 +7,38 @@ __Author__ = 'Hypnoes'
 
 from functools import partial
 from random import sample
+from typing import List
 
 import numpy as np
 import matplotlib.pyplot as plt
 
-NDarray = np.ndarray
-
-class draw(object):
-    def __init__(self, func):
-        self.__func = func
-        self.__return = None
-
-    def __call__(self, *args, **kwargs):
-        draw_data = {}
-
-        self.__return = self.__func(*args, **kwargs)
-
-        scatter_data = np.array(draw_data['scatter_data'])
-        plot_data = np.array(draw_data['plot_data'])
-
-        plt.scatter(scatter_data[:, 0], scatter_data[:, 1])
-        plt.plot(plot_data[:, 0], plot_data[:, 1], 'rx')
-        plt.show()
-
-        return self.__return
-
 class KMeans(object):
     def __init__(self, k: int):
         self.k = k
+        self.centers = None
 
-    def fit(self, data: NDarray) -> None:
-        center_points = sample(list(data), self.k)
-        for center_point in center_points:
-            i = 0
-            new_center_point = center_point
-            for _ in range(10):
-                distance = [point - new_center_point for point in data]
-                distance.sort(key=partial(np.linalg.norm, ord=2))
-                group = distance[:len(distance) // self.k]
-                move = np.array(group).mean(axis=0)
-                print(f"{i}. Center: {new_center_point}, Move: {move}")
-                new_center_point = new_center_point + move
-                i += 1
-            print()
+    def fit(self, data: np.ndarray) -> List[np.ndarray]:
+        centers = sample(list(data), self.k)
+        groups = []
+        for i in range(10):
+            groups = [[] for i in range(self.k)]
+            for point in data:
+                distance = [point - center for center in centers]
+                min_distance = min(distance, key=partial(np.linalg.norm, ord=2))
+                ixs = [i_ for i_ in range(len(distance)) if\
+                    not (min_distance == distance[i_]).all()][0]
+                groups[ixs].append(point)
+            new_centers = []
+            for group in groups:
+                new_center = np.array(group).mean(axis=0)
+                new_centers.append(new_center)
+            centers = new_centers
+            print(f'{i}. Center: {centers}')
+        self.centers = centers
+        groups = list(map(np.array, groups))
+        return groups
 
-def read_data(data_file: str) -> NDarray:
+def read_data(data_file: str) -> np.ndarray:
     data = []
     with open(data_file) as file:
         for line in file.readlines():
@@ -63,7 +50,13 @@ def main():
     data = read_data('aout.txt')
     km = KMeans(2)
 
-    km.fit(data)
+    g = km.fit(data)
+
+    for i in g:
+        plt.scatter(i[:, 0], i[:, 1])
+    centers = np.array(km.centers)
+    plt.scatter(centers[:, 0], centers[:, 1], c='m', marker='X',  edgecolors='black')
+    plt.show()
 
 if __name__ == '__main__':
     try:
