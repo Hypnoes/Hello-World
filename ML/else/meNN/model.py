@@ -6,6 +6,7 @@ import random
 from typing import Callable, List, TypeVar
 
 from vector import Vector
+from itertools_ex import grouper
 
 T = TypeVar('T')
 
@@ -19,6 +20,12 @@ class D(object):
     def get_feature(self, name: str) -> float:
         index = self.featurename.index(name)
         return self.features[index]
+
+    def __str__(self):
+        return 'D'
+    
+    def __repr__(self):
+        return 'D'
 
 class Model(object):
     def __init__(self, fn: Callable, loss: Callable = None):
@@ -50,7 +57,7 @@ class Model(object):
         bias = 0.0
         y_ = 0.0
 
-        batchs = splist(data, batch_size)
+        batchs = grouper(data, batch_size)
 
         for i in range(epoch):
             for batch in batchs:
