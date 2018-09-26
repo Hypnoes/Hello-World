@@ -1,6 +1,6 @@
 #!python3
 '''
-    ...
+    ...Kmeans...
 '''
 
 __Author__ = 'Hypnoes'
@@ -55,7 +55,7 @@ def main():
     for i in g:
         plt.scatter(i[:, 0], i[:, 1])
     centers = np.array(km.centers)
-    plt.scatter(centers[:, 0], centers[:, 1], c='m', marker='X',  edgecolors='black')
+    plt.scatter(centers[:, 0], centers[:, 1], c='m', marker='X', edgecolors='black')
     plt.show()
 
 if __name__ == '__main__':
