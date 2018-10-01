@@ -4,9 +4,9 @@ import collections
 import operator
 import random
 
-from itertools import islice, chain, count, groupby
-from itertools import repeat, starmap, tee, zip_longest
-from itertools import cycle, filterfalse, combinations
+from itertools import (islice, chain, count, groupby,
+                       repeat, starmap, tee, zip_longest,
+                       cycle, filterfalse, combinations)
 
 
 def take(n, iterable):

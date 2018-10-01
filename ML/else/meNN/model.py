@@ -10,7 +10,13 @@ from itertools_ex import grouper
 
 T = TypeVar('T')
 
-class D(object):
+class GenralDataType(object):
+    '''
+        GeneralDataType: General Data Type
+
+        + this.feature: Vector
+        + this.label: float
+    '''
     def __init__(self, features: Vector, label: float, featurename: List[str] = None):
         self.features = features
         self.label = label
@@ -21,9 +27,12 @@ class D(object):
         index = self.featurename.index(name)
         return self.features[index]
 
+    def get_feature_len(self) -> int:
+        return len(self.features)
+
     def __str__(self):
         return 'D'
-    
+
     def __repr__(self):
         return 'D'
 
@@ -34,7 +43,7 @@ class Model(object):
 
         self.W: Vector
 
-    def fit(self, data: List[D],
+    def fit(self, data: List[GenralDataType],
             lr: float,
             batch_size: int = 20,
             iteration: int = 1,
@@ -53,19 +62,19 @@ class Model(object):
                 None
         '''
 
-        W_ = [0.0] * len(data[1].features) # fix len data[1]
+        W_ = [0.0] * max(data, key=lambda x: x.get_feature_len) # fix len data[1]
         bias = 0.0
         y_ = 0.0
 
         batchs = grouper(data, batch_size)
 
         for i in range(epoch):
+            err = 0.0
             for batch in batchs:
                 for d in batch:
                     f = d.features
                     l = d.label
 
-                    err = 0.0
 
                     for _ in range(iteration):
                         # forward broadcast
@@ -86,7 +95,7 @@ class Model(object):
 
         self.W = W_
 
-    def estimize(self, data: List[D]) -> float:
+    def estimize(self, data: List[GenralDataType]) -> float:
         features = list()
         labels = list()
 
@@ -149,7 +158,7 @@ def gen_data(tri: int, tes: int) -> (Vector, Vector):
             tes: number of testing data
 
         `return`
-            Tuple(train: Vector[D], test: Vector[D])
+            Tuple(train: Vector[GenralDataType], test: Vector[GenralDataType])
 
     '''
 
@@ -166,7 +175,7 @@ def gen_data(tri: int, tes: int) -> (Vector, Vector):
     train = list()
     test = list()
 
-    # data structure : List(D(features: List, label: Double))
+    # data structure : List(GenralDataType(features: List, label: Double))
     # train-data
     for i in range(tri):
         c1x_train.append(random.uniform(0.0, 0.5))
@@ -175,8 +184,8 @@ def gen_data(tri: int, tes: int) -> (Vector, Vector):
         c2x_train.append(random.uniform(0.5, 1.0))
         c2y_train.append(random.uniform(0.5, 1.0))
 
-        train.append(D([c1x_train[i], c1y_train[i]], 0))
-        train.append(D([c2x_train[i], c2y_train[i]], 1))
+        train.append(GenralDataType([c1x_train[i], c1y_train[i]], 0))
+        train.append(GenralDataType([c2x_train[i], c2y_train[i]], 1))
 
     # test-data
     for i in range(tes):
@@ -186,20 +195,45 @@ def gen_data(tri: int, tes: int) -> (Vector, Vector):
         c2x_test.append(random.uniform(0.5, 1.0))
         c2y_test.append(random.uniform(0.5, 1.0))
 
-        test.append(D([c1x_test[i], c1y_test[i]], 0))
-        test.append(D([c2x_test[i], c2y_test[i]], 0))
+        test.append(GenralDataType([c1x_test[i], c1y_test[i]], 0))
+        test.append(GenralDataType([c2x_test[i], c2y_test[i]], 0))
 
     random.shuffle(train)
     random.shuffle(test)
 
     return train, test
 
+def gen_data_(tri: int, tes: int) -> (Vector, Vector):
+    '''
+        Generate training and test data.
+
+        `params`
+            tri: number of training data
+            tes: number of testing data
+
+        `return`
+            Tuple(train: Vector[GenralDataType], 
+                test: Vector[GenralDataType])
+
+    '''
+
+    dataset = []
+    for i in range(tri + tes):
+        dataset.append(GenralDataType([random.uniform(0.0, 0.5), random.uniform(0.0, 0.5)], 0))
+        dataset.append(GenralDataType([random.uniform(0.5, 1.0), random.uniform(0.5, 1.0)], 1))
+
+    train = random.sample(dataset, tri)
+    test = random.sample(dataset, tes)
+
+    return train, test
+
+
 def main():
-    train, test = gen_data(1000, 10)
+    train, test = gen_data_(1000, 10)
 
     model = Model(linear)
 
-    model.fit(train, 0.5, 0.2, iteration=3)
+    model.fit(train, 0.5, iteration=3)
     acc = model.estimize(test)
 
     print(f'acc: {acc}')
