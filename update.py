@@ -15,7 +15,7 @@ def main():
     length = len(o)
     for x in o:
         print(f"[{o.index(x)}/{length}]: {x}", end='\r')
-        sp.run(['pip', 'install', '--upgrade', x])
+        sp.run(['pip', 'install', '--upgrade', x], stdout=os.devnull)
     os.remove(tmp)
 
 if __name__ == '__main__':
