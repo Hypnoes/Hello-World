@@ -1,22 +1,27 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-import os
-import subprocess as sp
-import json
+from os import system, remove
+from os import path, devnull
+from subprocess import run
+from json import load
+from operator import add
+from functools import reduce
 
 def main():
     tmp = 'tmp.json'
-    if os.path.exists(tmp):
-        os.remove(tmp)
-    os.system("pip list -o --format=json >> " + tmp)
+    if path.exists(tmp):
+        remove(tmp)
+    system("pip list -o --format=json >> " + tmp)
     with open(tmp) as f:
-        o = list(map(lambda x: x['name'], json.load(f)))
-    length = len(o)
+        o = map(lambda x: x['name'], load(f))
+    length = reduce(add, map(lambda x: 1, o))
+    indx = 1
     for x in o:
-        print(f"[{o.index(x)}/{length}]: {x}", end='\r')
-        sp.run(['pip', 'install', '--upgrade', x], stdout=os.devnull)
-    os.remove(tmp)
+        print(f"[{index}/{length}]: {x}", end='\r')
+        run(['pip', 'install', '--upgrade', x], stdout=os.devnull)
+        indx += 1
+    remove(tmp)
 
 if __name__ == '__main__':
     main()
