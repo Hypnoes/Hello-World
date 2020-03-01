@@ -6,8 +6,7 @@
 from typing import List
 
 class Solution:
-    @staticmethod
-    def isPalindrome(s: str) -> bool:
+    def isPalindrome(self, s: str) -> bool:
         """
         :type s: str
         :rtype: bool
@@ -41,8 +40,7 @@ class Solution:
 
         return True
 
-    @staticmethod
-    def singleNumber(nums: List[int]) -> int:
+    def singleNumber(self, nums: List[int]) -> int:
         """
         :type nums: List[int]
         :rtype: int
@@ -58,5 +56,3 @@ class Solution:
             if d[i] == 1:
                 return i
 
-if __name__ == '__main__':
-    print("123")
