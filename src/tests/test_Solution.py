@@ -1,7 +1,7 @@
 #!python3
 
 import unittest
-from leetcode import Solution
+from leetcode.solutions import Solution
 
 class TestSolution(unittest.TestCase):
     def test_isPalindrome(self):

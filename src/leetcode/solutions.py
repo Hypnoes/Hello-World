@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
-'''
-	leetcode.py
-'''
-from typing import List
+
+from typing import *
 
 class Solution:
     def isPalindrome(self, s: str) -> bool:

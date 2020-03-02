@@ -5,12 +5,13 @@
 
 __Author__ = 'Hypnoes'
 
+from typing import *
+
 from functools import partial
 from random import sample
-from typing import List
 
 import numpy as np
-import matplotlib.pyplot as plt
+
 
 class KMeans(object):
     def __init__(self, k: int):
@@ -24,9 +25,10 @@ class KMeans(object):
             groups = [[] for i in range(self.k)]
             for point in data:
                 distance = [point - center for center in centers]
-                min_distance = min(distance, key=partial(np.linalg.norm, ord=2))
-                ixs = [i_ for i_ in range(len(distance)) if\
-                    not (min_distance == distance[i_]).all()][0]
+                min_distance = min(
+                    distance, key=partial(np.linalg.norm, ord=2))
+                ixs = [i_ for i_ in range(len(distance)) if
+                       not (min_distance == distance[i_]).all()][0]
                 groups[ixs].append(point)
             new_centers = []
             for group in groups:
@@ -37,29 +39,3 @@ class KMeans(object):
         self.centers = centers
         groups = list(map(np.array, groups))
         return groups
-
-def read_data(data_file: str) -> np.ndarray:
-    data = []
-    with open(data_file) as file:
-        for line in file.readlines():
-            data.append(line.rstrip("\n").split(","))
-
-    return np.array(data, dtype=np.float)
-
-def main():
-    data = read_data('aout.txt')
-    km = KMeans(2)
-
-    g = km.fit(data)
-
-    for i in g:
-        plt.scatter(i[:, 0], i[:, 1])
-    centers = np.array(km.centers)
-    plt.scatter(centers[:, 0], centers[:, 1], c='m', marker='X', edgecolors='black')
-    plt.show()
-
-if __name__ == '__main__':
-    try:
-        main()
-    except KeyboardInterrupt:
-        print('end')
